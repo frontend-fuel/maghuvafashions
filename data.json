@@ -1,0 +1,42 @@
+[
+    {
+        "id": "1",
+        "title": "Sarees",
+        "image": "3.jpeg",
+        "icon": "fas fa-vest",
+        "description": "Discover our exquisite collection of handwoven and designer sarees. From traditional silk sarees to modern georgette designs, we offer a wide variety of sarees perfect for weddings, festivals, and special occasions. Each piece is carefully curated for quality and elegance.",
+        "features": [
+            "Silk & Cotton Sarees",
+            "Designer & Party Wear",
+            "Bridal Collection",
+            "Traditional & Modern Designs"
+        ]
+    },
+    {
+        "id": "2",
+        "title": "Maggam Work Blouses",
+        "image": "4.jpeg",
+        "icon": "fas fa-tshirt",
+        "description": "Elevate your saree look with our stunning Maggam work blouses. Handcrafted by skilled artisans, our blouses feature intricate zari work, aari embroidery, bead work, and stone embellishments. We offer custom designs to match your saree perfectly.",
+        "features": [
+            "Handcrafted Aari Work",
+            "Zari & Thread Embroidery",
+            "Custom Designs Available",
+            "Beads & Stone Work"
+        ],
+        "reverse": true
+    },
+    {
+        "id": "3",
+        "title": "Trending Bangles",
+        "image": "5.jpeg",
+        "icon": "fas fa-ring",
+        "description": "Complete your ethnic look with our trendy bangle collection. From colorful silk thread bangles to elegant stone-studded designs, we have bangles for every occasion. Our collection includes matching sets that complement your outfit perfectly.",
+        "features": [
+            "Silk Thread Bangles",
+            "Stone & Pearl Work",
+            "Matching Sets Available",
+            "All Sizes & Colors"
+        ]
+    }
+]
