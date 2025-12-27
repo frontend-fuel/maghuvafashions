@@ -62,8 +62,12 @@ async function loadDynamicContent() {
     if (!container) return;
 
     try {
-        const response = await fetch('data.json');
-        const data = await response.json();
+        let data = window.maghuvaData;
+
+        if (!data) {
+            const response = await fetch('data.json');
+            data = await response.json();
+        }
 
         container.innerHTML = data.map(item => `
             <div class="category-card ${item.reverse ? 'reverse' : ''}" data-aos="fade-up">
