@@ -38,5 +38,16 @@
             "Matching Sets Available",
             "All Sizes & Colors"
         ]
+    },
+    {
+        "id": "1766811743045",
+        "title": "sasi",
+        "image": "2.jpeg",
+        "icon": "fas fa-star",
+        "description": "sasi",
+        "features": [
+            ""
+        ],
+        "reverse": false
     }
 ]
