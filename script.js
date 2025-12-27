@@ -62,12 +62,10 @@ async function loadDynamicContent() {
     if (!container) return;
 
     try {
-        let data = window.maghuvaData;
-
-        if (!data) {
-            const response = await fetch('data.json');
-            data = await response.json();
-        }
+        // Fetch directly from GitHub Raw URL with cache busting
+        const repoUrl = 'https://raw.githubusercontent.com/frontend-fuel/maghuvafashions/main/data.json';
+        const response = await fetch(`${repoUrl}?t=${Date.now()}`);
+        const data = await response.json();
 
         container.innerHTML = data.map(item => `
             <div class="category-card ${item.reverse ? 'reverse' : ''}" data-aos="fade-up">
