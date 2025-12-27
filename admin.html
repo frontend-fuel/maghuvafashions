@@ -190,30 +190,23 @@
     </header>
 
     <div class="container">
-        <!-- Setup Section -->
+        <!-- Login Section -->
         <section id="setup-section">
-            <h2><i class="fas fa-key"></i> Connection Setup</h2>
-            <p>Connect your GitHub repository to enable real-time updates.</p>
-            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="form-group">
-                    <label>GitHub Username (Owner)</label>
-                    <input type="text" id="gh-owner" placeholder="e.g. sswebtech">
-                </div>
-                <div class="form-group">
-                    <label>Repository Name</label>
-                    <input type="text" id="gh-repo" placeholder="e.g. maghuva-fashion">
-                </div>
-                <div class="form-group">
-                    <label>Branch Name</label>
-                    <input type="text" id="gh-branch" value="main">
-                </div>
-                <div class="form-group">
-                    <label>Personal Access Token <a href="https://github.com/settings/tokens" target="_blank"
-                            style="font-size: 0.8rem;">(Get one here)</a></label>
-                    <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
-                </div>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img src="maghuva-logo.jpeg" alt="Logo" style="height: 80px; border-radius: 50%; margin-bottom: 1rem;">
+                <h2>Admin Login</h2>
+                <p>Enter your credentials to manage collections</p>
             </div>
-            <button class="btn" onclick="initializeAdmin()">Load Data <i class="fas fa-sync"></i></button>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="admin-user" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-pass" placeholder="Enter password">
+            </div>
+            <button class="btn" style="width: 100%;" onclick="initializeAdmin()">Login to Dashboard <i
+                    class="fas fa-sign-in-alt"></i></button>
         </section>
 
         <!-- Admin Panel -->
@@ -226,8 +219,8 @@
                 <!-- Items will load here -->
             </div>
             <div style="margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 2rem; text-align: center;">
-                <button class="btn" style="background: #2e7d32;" onclick="saveToGitHub()">Finalize & Save Changes to
-                    GitHub <i class="fas fa-save"></i></button>
+                <button class="btn" id="save-btn" style="background: #2e7d32;" onclick="saveToGitHub(event)">Update Live
+                    Website <i class="fas fa-save"></i></button>
             </div>
         </section>
     </div>
@@ -265,7 +258,7 @@
                     </label>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="submit" class="btn">Save Local Change</button>
+                    <button type="submit" class="btn">Save Change</button>
                     <button type="button" class="btn" style="background: #666;" onclick="closeModal()">Cancel</button>
                 </div>
             </form>
@@ -276,7 +269,11 @@
 
     <script>
         let currentData = [];
-        let config = {};
+        let config = {
+            owner: 'frontend-fuel',
+            repo: 'maghuvafashions',
+            branch: 'main'
+        };
 
         function showStatus(msg, isError = false) {
             const bar = document.getElementById('status-bar');
@@ -287,37 +284,37 @@
         }
 
         async function initializeAdmin() {
-            config = {
-                owner: document.getElementById('gh-owner').value,
-                repo: document.getElementById('gh-repo').value,
-                token: document.getElementById('gh-token').value,
-                branch: document.getElementById('gh-branch').value
-            };
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
 
-            if (!config.owner || !config.repo || !config.token) {
-                alert("Please fill all GitHub details!");
+            if (user !== 'admin') {
+                alert("Invalid Username!");
                 return;
             }
 
+            config.token = pass; // Using password field as the Token internally
+
             try {
+                showStatus("Authenticating...");
                 // Fetch current data.json from the repo
                 const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/data.json?ref=${config.branch}`;
                 const response = await fetch(url, {
                     headers: { 'Authorization': `token ${config.token}` }
                 });
 
-                if (!response.ok) throw new Error("Could not find data.json in repository.");
+                if (!response.ok) throw new Error("Login Failed! Please check your Password (Token).");
 
                 const fileData = await response.json();
                 config.sha = fileData.sha;
-                currentData = JSON.parse(atob(fileData.content));
+                currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
                 document.getElementById('setup-section').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
                 renderList();
-                showStatus("Data loaded successfully!");
+                showStatus("Logged in successfully!");
             } catch (err) {
                 alert(err.message);
+                showStatus("Login Failed", true);
             }
         }
 
@@ -400,10 +397,10 @@
             }
         }
 
-        async function saveToGitHub() {
+        async function saveToGitHub(event) {
             if (!config.token) return;
 
-            const btn = e.target;
+            const btn = event.target;
             const originalText = "Finalize & Save Changes to GitHub";
 
             try {
